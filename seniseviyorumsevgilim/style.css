@@ -1,0 +1,785 @@
+:root {
+  --bg-dark: #14080e;
+  --bg-gradient: radial-gradient(circle at 50% 0%, #3b0d22 0%, #1a0610 55%, #0f0309 100%);
+  --card-bg: rgba(255, 240, 245, 0.06);
+  --card-border: rgba(255, 182, 193, 0.18);
+  --primary: #ff3b6b;
+  --primary-glow: rgba(255, 59, 107, 0.45);
+  --accent-gold: #f7d08a;
+  --text-light: #fff5f8;
+  --text-muted: #d9b8c4;
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-script: 'Dancing Script', cursive;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg-dark);
+  background-image: var(--bg-gradient);
+  color: var(--text-light);
+  font-family: var(--font-sans);
+  min-height: 100vh;
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* Arka plan kalp tuvali */
+#hearts-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* ==========================================================================
+   GİRİŞ EKRANI (WELCOME OVERLAY)
+   ========================================================================== */
+.welcome-overlay {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at center, #2d0a1b 0%, #0d0207 100%);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+
+.welcome-overlay.fade-out {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.welcome-card {
+  max-width: 480px;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--card-border);
+  border-radius: 28px;
+  padding: 3rem 2rem;
+  text-align: center;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6), 0 0 40px rgba(255, 59, 107, 0.15);
+}
+
+.pulse-heart {
+  font-size: 4rem;
+  display: inline-block;
+  margin-bottom: 1rem;
+  animation: heartbeat 1.4s infinite ease-in-out;
+}
+
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  25% { transform: scale(1.18); }
+  50% { transform: scale(1.05); }
+  75% { transform: scale(1.22); }
+}
+
+.welcome-subtitle {
+  font-family: var(--font-script);
+  font-size: 1.7rem;
+  color: var(--accent-gold);
+  margin-bottom: 0.5rem;
+}
+
+.welcome-title {
+  font-family: var(--font-serif);
+  font-size: 2.4rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+
+.welcome-desc {
+  color: var(--text-muted);
+  font-size: 1rem;
+  margin-bottom: 2rem;
+}
+
+.primary-btn {
+  background: linear-gradient(135deg, #ff3b6b 0%, #d4145a 100%);
+  color: #fff;
+  border: none;
+  padding: 1rem 2.4rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  font-family: var(--font-sans);
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: 0 10px 25px var(--primary-glow);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.primary-btn:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 14px 32px rgba(255, 59, 107, 0.65);
+}
+
+.secondary-btn {
+  background: rgba(255, 59, 107, 0.12);
+  color: #c9184a;
+  border: 1px solid rgba(201, 24, 74, 0.3);
+  padding: 0.7rem 1.8rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 999px;
+  cursor: pointer;
+  margin-top: 1.5rem;
+  transition: all 0.2s ease;
+}
+
+.secondary-btn:hover {
+  background: rgba(255, 59, 107, 0.22);
+}
+
+/* ==========================================================================
+   MÜZİK ÇALAR
+   ========================================================================== */
+.music-player {
+  position: fixed;
+  bottom: 1.25rem;
+  right: 1.25rem;
+  z-index: 900;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: rgba(25, 8, 18, 0.85);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--card-border);
+  padding: 0.6rem 1rem;
+  border-radius: 999px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.vinyl-disc {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #ff3b6b 25%, #111 28%, #222 60%, #111 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+}
+
+.vinyl-disc.spinning {
+  animation: spin 4s linear infinite;
+}
+
+@keyframes spin {
+  100% { transform: rotate(360deg); }
+}
+
+.music-info {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.music-title {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-light);
+}
+
+.music-artist {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.music-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  cursor: pointer;
+  color: #fff;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.music-btn:hover {
+  background: var(--primary);
+}
+
+/* ==========================================================================
+   ANA İÇERİK & HERO BÖLÜMÜ
+   ========================================================================== */
+.main-content {
+  position: relative;
+  z-index: 1;
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 5rem;
+}
+
+.hero-section {
+  min-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 3rem 0;
+}
+
+.hero-badge {
+  background: rgba(255, 59, 107, 0.15);
+  border: 1px solid rgba(255, 59, 107, 0.35);
+  color: #ff8fa3;
+  padding: 0.4rem 1.1rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  margin-bottom: 1.5rem;
+}
+
+.hero-title {
+  font-family: var(--font-serif);
+  font-size: clamp(2.6rem, 6vw, 4.5rem);
+  font-weight: 700;
+  line-height: 1.12;
+  background: linear-gradient(135deg, #ffffff 0%, #ffb3c6 55%, #f7d08a 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 0.75rem;
+}
+
+.hero-Names {
+  font-family: var(--font-script);
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  color: var(--accent-gold);
+  margin-bottom: 1rem;
+}
+
+.hero-quote {
+  max-width: 620px;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(1.15rem, 2.5vw, 1.45rem);
+  color: var(--text-muted);
+  margin-bottom: 2.8rem;
+}
+
+/* CANLI AŞK SAYACI KARTI */
+.counter-card {
+  width: 100%;
+  max-width: 760px;
+  background: var(--card-bg);
+  backdrop-filter: blur(18px);
+  border: 1px solid var(--card-border);
+  border-radius: 28px;
+  padding: 2.2rem 1.5rem;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+}
+
+.counter-heading {
+  font-family: var(--font-serif);
+  font-size: 1.65rem;
+  color: var(--text-light);
+  margin-bottom: 0.25rem;
+}
+
+.counter-start-date {
+  font-size: 0.9rem;
+  color: var(--accent-gold);
+  margin-bottom: 1.5rem;
+}
+
+.counter-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.counter-box {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 18px;
+  padding: 1.2rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.counter-num {
+  font-family: var(--font-serif);
+  font-size: clamp(2rem, 4.5vw, 3rem);
+  font-weight: 700;
+  color: #ff6b8b;
+  line-height: 1;
+  margin-bottom: 0.35rem;
+}
+
+.counter-unit {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+}
+
+.counter-detail {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+}
+
+/* ==========================================================================
+   GENEL BÖLÜM STİLLERİ
+   ========================================================================== */
+.section {
+  padding: 4.5rem 0;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.section-tag {
+  display: inline-block;
+  font-size: 0.85rem;
+  color: var(--accent-gold);
+  background: rgba(247, 208, 138, 0.12);
+  border: 1px solid rgba(247, 208, 138, 0.3);
+  padding: 0.35rem 1rem;
+  border-radius: 999px;
+  margin-bottom: 0.75rem;
+}
+
+.section-title {
+  font-family: var(--font-serif);
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  margin-bottom: 0.4rem;
+}
+
+.section-desc {
+  color: var(--text-muted);
+  font-size: 0.98rem;
+}
+
+/* ==========================================================================
+   ZARF & AŞK MEKTUBU
+   ========================================================================== */
+.envelope-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 4rem;
+}
+
+.envelope {
+  position: relative;
+  width: 300px;
+  height: 200px;
+  background: linear-gradient(135deg, #ff758f, #c9184a);
+  border-radius: 16px;
+  cursor: pointer;
+  box-shadow: 0 20px 45px rgba(201, 24, 74, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+.envelope:hover {
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 28px 55px rgba(255, 59, 107, 0.55);
+}
+
+.envelope-seal {
+  font-size: 2.5rem;
+  background: #fff0f3;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  z-index: 2;
+}
+
+.letter-preview {
+  position: absolute;
+  bottom: 18px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: 0.5px;
+}
+
+.letter-modal {
+  display: none;
+  width: 100%;
+  max-width: 650px;
+  margin-top: 1.5rem;
+  animation: slideUp 0.5s ease forwards;
+}
+
+.letter-modal.open {
+  display: block;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.letter-paper {
+  background: #fff9fb;
+  color: #2b0f1c;
+  padding: 2.8rem 2.2rem;
+  border-radius: 22px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.55);
+  border: 2px solid #ffd6e0;
+  position: relative;
+}
+
+.letter-greeting {
+  font-family: var(--font-script);
+  font-size: 2.2rem;
+  color: #c9184a;
+  margin-bottom: 1.2rem;
+}
+
+.letter-body p {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  line-height: 1.75;
+  margin-bottom: 1.1rem;
+  color: #3d1628;
+}
+
+.letter-signature {
+  font-family: var(--font-script);
+  font-size: 1.75rem;
+  color: #c9184a;
+  text-align: right;
+  margin-top: 1.5rem;
+}
+
+/* SENİ NEDEN SEVİYORUM KARTLARI */
+.reasons-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.25rem;
+}
+
+.reason-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 22px;
+  padding: 1.75rem 1.5rem;
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.reason-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--primary);
+}
+
+.reason-icon {
+  font-size: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.reason-title {
+  font-family: var(--font-serif);
+  font-size: 1.4rem;
+  color: var(--accent-gold);
+  margin-bottom: 0.5rem;
+}
+
+.reason-text {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+}
+
+/* ==========================================================================
+   HİKAYEMİZ (TIMELINE)
+   ========================================================================== */
+.timeline {
+  position: relative;
+  max-width: 780px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.timeline-item {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-left: 4px solid var(--primary);
+  border-radius: 20px;
+  padding: 1.75rem;
+  transition: transform 0.25s ease;
+}
+
+.timeline-item:hover {
+  transform: translateX(6px);
+}
+
+.timeline-date {
+  display: inline-block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #ff8fa3;
+  margin-bottom: 0.35rem;
+}
+
+.timeline-title {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  color: var(--text-light);
+  margin-bottom: 0.5rem;
+}
+
+.timeline-desc {
+  color: var(--text-muted);
+  font-size: 0.96rem;
+}
+
+/* ==========================================================================
+   POLAROID FOTOĞRAF GALERİSİ
+   ========================================================================== */
+.polaroid-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 1.75rem;
+}
+
+.polaroid-card {
+  background: #fff9fb;
+  padding: 0.85rem 0.85rem 1.4rem;
+  border-radius: 16px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.45);
+  cursor: pointer;
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+.polaroid-card:nth-child(odd) {
+  transform: rotate(-2deg);
+}
+
+.polaroid-card:nth-child(even) {
+  transform: rotate(2deg);
+}
+
+.polaroid-card:hover {
+  transform: rotate(0deg) translateY(-8px) scale(1.03);
+  box-shadow: 0 22px 45px rgba(255, 59, 107, 0.35);
+}
+
+.polaroid-card img {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 0.85rem;
+}
+
+.polaroid-caption {
+  font-family: var(--font-script);
+  font-size: 1.35rem;
+  color: #3d1628;
+  text-align: center;
+}
+
+/* ==========================================================================
+   "BENİ SEVİYOR MUSUN?" EĞLENCELİ BÖLÜM
+   ========================================================================== */
+.question-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 28px;
+  padding: 3.5rem 1.5rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  min-height: 340px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.question-emoji {
+  font-size: 3.4rem;
+  margin-bottom: 0.75rem;
+}
+
+.question-title {
+  font-family: var(--font-serif);
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  margin-bottom: 0.5rem;
+}
+
+.question-subtitle {
+  color: var(--text-muted);
+  margin-bottom: 2rem;
+}
+
+.question-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  width: 100%;
+  min-height: 80px;
+  position: relative;
+}
+
+.yes-btn {
+  background: linear-gradient(135deg, #ff3b6b 0%, #c9184a 100%);
+  color: #fff;
+  border: none;
+  padding: 1rem 2.2rem;
+  border-radius: 999px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 10px 25px var(--primary-glow);
+  transition: transform 0.25s ease;
+  z-index: 2;
+}
+
+.yes-btn:hover {
+  transform: scale(1.06);
+}
+
+.no-btn {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--text-muted);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 0.9rem 1.8rem;
+  border-radius: 999px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+/* ==========================================================================
+   MODALLAR & LIGHTBOX & FOOTER
+   ========================================================================== */
+.celebration-modal,
+.lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(12, 3, 8, 0.88);
+  backdrop-filter: blur(12px);
+  z-index: 1100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.celebration-card {
+  max-width: 480px;
+  width: 100%;
+  background: #240917;
+  border: 2px solid var(--primary);
+  border-radius: 28px;
+  padding: 2.8rem 2rem;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(255, 59, 107, 0.4);
+}
+
+.celebration-hearts {
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+}
+
+.celebration-card h2 {
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.celebration-card p {
+  color: var(--text-muted);
+  margin-bottom: 2rem;
+}
+
+.lightbox {
+  flex-direction: column;
+}
+
+.lightbox img {
+  max-width: 90vw;
+  max-height: 75vh;
+  border-radius: 16px;
+  border: 4px solid #fff;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+}
+
+#lightbox-caption {
+  margin-top: 1rem;
+  font-family: var(--font-script);
+  font-size: 1.8rem;
+  color: var(--accent-gold);
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 1.5rem;
+  right: 2rem;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 3rem;
+  cursor: pointer;
+}
+
+.footer {
+  text-align: center;
+  padding-top: 3rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+.footer-domain {
+  font-family: var(--font-serif);
+  color: var(--accent-gold);
+  margin-top: 0.35rem;
+  font-size: 1.1rem;
+}
+
+@media (max-width: 640px) {
+  .counter-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .letter-paper {
+    padding: 2rem 1.4rem;
+  }
+}

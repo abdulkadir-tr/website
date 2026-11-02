@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Seni Seviyorum Sevgilim ❤️</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Arka Plan Kalp Parçacıkları -->
+  <canvas id="hearts-canvas"></canvas>
+
+  <!-- GİRİŞ EKRANI (Müzik başlatmak ve sürpriz etkisi için) -->
+  <div id="welcome-overlay" class="welcome-overlay">
+    <div class="welcome-card">
+      <div class="pulse-heart">❤️</div>
+      <p class="welcome-subtitle" id="welcome-names">Ferhat & Sevgilisi</p>
+      <h1 class="welcome-title">Sana Özel Bir Sürprizim Var...</h1>
+      <p class="welcome-desc">Kalbimin en güzel köşesine hoş geldin. Hazırsan aşağıdaki butona dokun.</p>
+      <button id="enter-btn" class="primary-btn">
+        <span>Sürprizi Aç ✨</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- SABİT MÜZİK ÇALAR -->
+  <div id="music-player" class="music-player hidden">
+    <div class="vinyl-disc" id="vinyl-disc">🎵</div>
+    <div class="music-info">
+      <span class="music-title" id="song-title">Bizim Şarkımız</span>
+      <span class="music-artist" id="song-artist">Seni Seviyorum</span>
+    </div>
+    <button id="music-toggle" class="music-btn" aria-label="Müziği Oynat/Duraklat">⏸️</button>
+    <audio id="bg-audio" loop preload="auto"></audio>
+  </div>
+
+  <!-- ANA İÇERİK -->
+  <main id="main-content" class="main-content">
+    
+    <!-- HERO BÖLÜMÜ -->
+    <section class="hero-section">
+      <div class="hero-badge">seniseviyorumsevgilim.com.tr</div>
+      <h1 class="hero-title" id="hero-title">Seni Çok Seviyorum Sevgilim</h1>
+      <p class="hero-Names" id="couple-names">Ferhat ❤️ Sevgilim</p>
+      <p class="hero-quote" id="hero-quote">
+        "Seninle geçen her saniye, hayatımın en güzel hikayesi..."
+      </p>
+
+      <!-- CANLI AŞK SAYACI -->
+      <div class="counter-card">
+        <h2 class="counter-heading" id="counter-label">Seninle Başlayan Hikayemiz</h2>
+        <p class="counter-start-date" id="start-date-display">Başlangıç: 14 Şubat 2024</p>
+        <div class="counter-grid">
+          <div class="counter-box">
+            <span id="c-days" class="counter-num">0</span>
+            <span class="counter-unit">Toplam Gün</span>
+          </div>
+          <div class="counter-box">
+            <span id="c-hours" class="counter-num">00</span>
+            <span class="counter-unit">Saat</span>
+          </div>
+          <div class="counter-box">
+            <span id="c-minutes" class="counter-num">00</span>
+            <span class="counter-unit">Dakika</span>
+          </div>
+          <div class="counter-box">
+            <span id="c-seconds" class="counter-num">00</span>
+            <span class="counter-unit">Saniye</span>
+          </div>
+        </div>
+        <p class="counter-detail" id="counter-detailed-text"></p>
+      </div>
+    </section>
+
+    <!-- AÇILAN ROMANTİK ZARF / MEKTUP BÖLÜMÜ -->
+    <section class="section letter-section">
+      <div class="section-header">
+        <span class="section-tag">Sana Notum Var 💌</span>
+        <h2 class="section-title">Kalbimden Dökülenler</h2>
+        <p class="section-desc">Mektubu okumak için zarfın üzerine dokun</p>
+      </div>
+
+      <div class="envelope-wrapper" id="envelope-wrapper">
+        <div class="envelope" id="envelope">
+          <div class="envelope-flap"></div>
+          <div class="envelope-pocket"></div>
+          <div class="envelope-seal">❤️</div>
+          <div class="letter-preview">Dokun ve Aç 💌</div>
+        </div>
+
+        <div class="letter-modal" id="letter-content">
+          <div class="letter-paper">
+            <h3 class="letter-greeting" id="letter-greeting">Canım Sevgilim,</h3>
+            <div class="letter-body" id="letter-body"></div>
+            <p class="letter-signature" id="letter-signature">Seni her şeyden çok seven sevgilin ❤️</p>
+            <button class="secondary-btn" id="close-letter-btn">Zarfı Kapat</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SENİ NEDEN SEVİYORUM KARTLARI -->
+      <div class="reasons-grid" id="reasons-grid"></div>
+    </section>
+
+    <!-- HİKAYEMİZ (ZAMAN TÜNELİ) -->
+    <section class="section timeline-section">
+      <div class="section-header">
+        <span class="section-tag">Bizim Yolculuğumuz ✨</span>
+        <h2 class="section-title">Hikayemiz</h2>
+        <p class="section-desc">Birlikte biriktirdiğimiz unutulmaz anlar</p>
+      </div>
+      <div class="timeline" id="timeline-container"></div>
+    </section>
+
+    <!-- FOTOĞRAF GALERİSİ (POLAROID) -->
+    <section class="section gallery-section">
+      <div class="section-header">
+        <span class="section-tag">En Güzel Anlarımız 📸</span>
+        <h2 class="section-title">Anı Galerimiz</h2>
+        <p class="section-desc">Büyütmek için fotoğraflara dokunabilirsin</p>
+      </div>
+      <div class="polaroid-grid" id="gallery-container"></div>
+    </section>
+
+    <!-- EĞLENCELİ SORU: BENİ SEVİYOR MUSUN? -->
+    <section class="section question-section">
+      <div class="question-card" id="question-card">
+        <div class="question-emoji" id="question-emoji">🥺👉👈</div>
+        <h2 class="question-title" id="question-title">Beni Seviyor Musun?</h2>
+        <p class="question-subtitle" id="question-subtitle">Dürüst ol ama yanlış cevabı seçmek biraz zor olabilir 😄</p>
+        
+        <div class="question-buttons" id="question-buttons-area">
+          <button id="yes-btn" class="yes-btn">Evet, Çok Seviyorum! ❤️</button>
+          <button id="no-btn" class="no-btn">Hayır</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <p>Sonsuza dek birlikte olmak dileğiyle... ❤️</p>
+      <p class="footer-domain">seniseviyorumsevgilim.com.tr</p>
+    </footer>
+
+  </main>
+
+  <!-- EVET TIKLANDIĞINDA AÇILAN KUTLAMA MODALI -->
+  <div id="celebration-modal" class="celebration-modal hidden">
+    <div class="celebration-card">
+      <div class="celebration-hearts">💖🎉🥰</div>
+      <h2>Biliyordum! Ben de Seni Çok Seviyorum!</h2>
+      <p id="celebration-text">İyi ki hayatımdasın, iyi ki benim sevgilimsin. Nice mutlu yıllarımıza!</p>
+      <button id="close-celebration" class="primary-btn">Sarılalım 🤗❤️</button>
+    </div>
+  </div>
+
+  <!-- FOTOĞRAF BÜYÜTME (LIGHTBOX) -->
+  <div id="lightbox" class="lightbox hidden">
+    <button id="lightbox-close" class="lightbox-close">&times;</button>
+    <img id="lightbox-img" src="" alt="Anımız" />
+    <p id="lightbox-caption"></p>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
